@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Custom Garage</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080808;
+  --surface: #0f0f0f;
+  --card:    #141414;
+  --lift:    #1c1c1c;
+  --border:  rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.16);
+  --gold:    #d4a843;
+  --gold2:   #f0c060;
+  --goldfade:rgba(212,168,67,0.13);
+  --red:     #e05252;
+  --redfade: rgba(224,82,82,0.1);
+  --text:    #f2ede6;
+  --text2:   #c8c2ba;
+  --sub:     #9a958e;
+  --dim:     #555048;
+  --white:   #ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden}
+
+header{position:relative;overflow:hidden;background:var(--surface);border-bottom:1px solid var(--border)}
+.header-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 120% at 60% -20%,rgba(212,168,67,0.08) 0%,transparent 70%);pointer-events:none}
+.header-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,rgba(0,0,0,0.4) 30%,rgba(0,0,0,0.4) 70%,transparent)}
+.gold-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent)}
+.header-inner{position:relative;max-width:1160px;margin:0 auto;padding:36px 28px 30px;display:flex;align-items:center;gap:20px}
+.logo-hex{width:64px;height:64px;flex-shrink:0}
+.logo-hex svg{width:64px;height:64px}
+.logo-text{flex:1}
+.logo-text h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5.5vw,58px);letter-spacing:4px;line-height:1;color:var(--white)}
+.logo-text h1 em{color:var(--gold);font-style:normal}
+.logo-text p{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:3.5px;text-transform:uppercase;color:var(--sub);margin-top:5px}
+
+
+.layout{max-width:1160px;margin:0 auto;padding:28px 28px 0;display:block}
+.sidebar{width:100%;margin-top:20px}
+
+.id-panel{position:relative;background:var(--card);border:1px solid rgba(224,82,82,0.25);border-radius:12px;padding:20px 22px;margin-bottom:18px;overflow:hidden}
+.id-panel::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);border-radius:3px 0 0 3px}
+.id-panel-title{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.id-icon{width:32px;height:32px;background:var(--redfade);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.id-panel-title h2{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);font-weight:600}
+.id-panel p{font-family:'Outfit',sans-serif;font-size:13.5px;color:#c8a8a8;line-height:1.65;margin-bottom:14px}
+.id-panel p strong{color:#e8c0c0}
+
+.id-toggles{display:block}
+.id-toggle{cursor:pointer;display:block}
+.id-toggle-face{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:rgba(224,82,82,0.05);border:1px solid rgba(224,82,82,0.18);border-radius:8px;transition:all 0.18s}
+.id-toggle:hover .id-toggle-face{background:rgba(224,82,82,0.09);border-color:rgba(224,82,82,0.3)}
+.id-toggle.active .id-toggle-face{background:rgba(224,82,82,0.14);border-color:rgba(224,82,82,0.45)}
+.id-toggle-label{font-family:'Outfit',sans-serif;font-size:13px;color:#d0b0b0;font-weight:500;display:flex;align-items:center;gap:8px;line-height:1.4}
+.id-chk{width:15px;height:15px;border-radius:3px;border:1.5px solid rgba(224,82,82,0.45);flex-shrink:0;transition:all 0.15s;background:transparent;display:inline-flex;align-items:center;justify-content:center}
+.id-toggle.active .id-chk{background:var(--red);border-color:var(--red)}
+.id-chk-mark{display:none;width:9px;height:9px}
+.id-toggle.active .id-chk-mark{display:block}
+.id-toggle-price{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:#f07070}
+.id-denda-note{margin-top:10px;padding:8px 12px;background:rgba(224,82,82,0.06);border-radius:6px;font-size:12px;color:#b09090;font-family:'DM Mono',monospace;display:none}
+.id-denda-note.show{display:block}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s}
+.section:hover{border-color:var(--border2)}
+.section.has-sel{border-color:rgba(212,168,67,0.3)}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;cursor:pointer;user-select:none;transition:background 0.15s;gap:12px;background:var(--lift)}
+.sec-hd:hover{background:#222}
+.sec-hd-left{display:flex;align-items:center;gap:12px;min-width:0}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px;flex-shrink:0}
+.sec-label{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#f0ece6;letter-spacing:0.4px}
+.sec-hd-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sec-pill{font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;background:var(--goldfade);color:var(--gold2);border-radius:20px;display:none;font-weight:500}
+.sec-pill.show{display:block}
+.sec-chevron{width:16px;height:16px;color:#888;transition:transform 0.25s;flex-shrink:0}
+.sec-chevron.open{transform:rotate(180deg)}
+.sec-body{max-height:0;overflow:hidden;transition:max-height 0.32s ease}
+.sec-body.open{max-height:3000px}
+
+.item-row{display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background 0.12s}
+.item-row:last-child{border-bottom:none}
+.item-row:hover{background:rgba(255,255,255,0.04)}
+.item-row.sel{background:rgba(212,168,67,0.06)}
+.chk-box{width:19px;height:19px;border:1.5px solid #555;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.item-row:hover .chk-box{border-color:#888}
+.item-row.sel .chk-box{background:var(--gold);border-color:var(--gold)}
+.chk-mark{display:none;width:10px;height:10px}
+.item-row.sel .chk-mark{display:block}
+.item-label{flex:1;font-family:'Outfit',sans-serif;font-size:14.5px;font-weight:400;color:#c8c2ba;transition:color 0.12s;letter-spacing:0.2px}
+.item-row:hover .item-label{color:#ddd8d0}
+.item-row.sel .item-label{color:#f2ede6;font-weight:500}
+.qty-wrap{display:flex;align-items:center;border:1px solid rgba(255,255,255,0.14);border-radius:6px;overflow:hidden;opacity:0.3;pointer-events:none;transition:opacity 0.15s}
+.item-row.sel .qty-wrap{opacity:1;pointer-events:auto}
+.qbtn{width:28px;height:28px;background:var(--lift);border:none;color:#bbb;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.1s;line-height:1;flex-shrink:0}
+.qbtn:hover{background:#333;color:#fff}
+.qval{width:30px;height:28px;background:var(--card);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:#e0dbd4;border-left:1px solid rgba(255,255,255,0.1);border-right:1px solid rgba(255,255,255,0.1);font-weight:500}
+.item-price{font-family:'JetBrains Mono',monospace;font-size:13px;color:#888;min-width:76px;text-align:right;transition:color 0.12s;flex-shrink:0;font-weight:400}
+.item-row:hover .item-price{color:#aaa}
+.item-row.sel .item-price{color:var(--gold2);font-weight:500}
+
+.sidebar{width:100%}
+.receipt{background:var(--card);border:1px solid var(--border2);border-top:1px solid var(--border2);border-radius:0;overflow:hidden}
+.receipt-top{padding:18px 28px 16px;border-bottom:1px solid var(--border);background:var(--lift)}
+.receipt-top-row{display:flex;align-items:center;justify-content:space-between;max-width:1160px;margin:0 auto}
+.receipt-top-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#f0ece6}
+.r-badge{background:var(--gold);color:#080808;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;display:none}
+.r-badge.show{display:block}
+.r-scroll{max-height:320px;overflow-y:auto;padding:4px 0}
+.r-scroll-inner{max-width:1160px;margin:0 auto}
+.r-scroll::-webkit-scrollbar{width:3px}
+.r-scroll::-webkit-scrollbar-track{background:transparent}
+.r-scroll::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+.r-empty{padding:28px 28px;text-align:center;color:#666;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-family:'Space Grotesk',sans-serif}
+.r-line{display:flex;align-items:flex-start;gap:8px;padding:10px 28px;border-bottom:1px solid rgba(255,255,255,0.05);animation:fadeSlide 0.18s ease;max-width:1160px;margin:0 auto}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.r-line:last-child{border-bottom:none}
+.r-line-name{flex:1;font-family:'Outfit',sans-serif;font-size:14px;color:#e8e3dc;line-height:1.5;font-weight:500}
+.r-line-qty{font-size:12px;color:#999;font-family:'JetBrains Mono',monospace}
+.r-line-price{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold2);min-width:80px;text-align:right;flex-shrink:0;font-weight:500}
+.r-line.pen .r-line-name{color:#e8b8b8}
+.r-line.pen .r-line-price{color:#f08080}
+.r-sep{height:1px;background:var(--border2);margin:4px 28px}
+.receipt-foot{padding:20px 28px;border-top:1px solid var(--border2);background:var(--surface)}
+.receipt-foot-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.total-block{display:flex;align-items:flex-end;gap:20px}
+.total-lbl{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#bbb;font-weight:600}
+.total-sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:#777;margin-top:4px}
+.total-num{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:1px;color:var(--gold2);line-height:1}
+.reset-btn{padding:12px 36px;background:transparent;border:1px solid rgba(255,255,255,0.18);border-radius:8px;color:#ccc;font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;font-weight:500}
+.reset-btn:hover{background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.35)}
+footer{border-top:1px solid var(--border);padding:16px 28px;text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-family:'Space Grotesk',sans-serif}
+.footer-credit{font-size:10px;color:rgba(255,255,255,0.08);letter-spacing:1px;margin-top:4px;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-bg"></div>
+  <div class="header-grid"></div>
+  <div class="gold-bar"></div>
+  <div class="header-inner">
+    <div class="logo-hex">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="32,4 58,18 58,46 32,60 6,46 6,18" fill="#1a1a1a" stroke="#d4a843" stroke-width="1.5"/>
+        <polygon points="32,12 52,23 52,41 32,52 12,41 12,23" fill="#d4a843" opacity="0.12"/>
+        <text x="32" y="38" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="18" fill="#d4a843" letter-spacing="1">ECG</text>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <h1>Elite Custom <em>Garage</em></h1>
+      <p>Kalkulator Biaya Modifikasi Resmi</p>
+    </div>
+
+  </div>
+</header>
+
+<div class="layout">
+  <div class="main">
+
+    <div class="id-panel">
+      <div class="id-panel-title">
+        <div class="id-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e05252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h2>Regulasi Identitas Wajib</h2>
+      </div>
+      <p>Setiap modifikasi wajib menyertakan <strong>KTP & SIM</strong>. Jika salah satu atau keduanya tidak dibawa, dikenakan denda <strong>$1.500</strong>.</p>
+      <div class="id-toggles">
+        <div class="id-toggle" id="tog-id" onclick="toggleId()">
+          <div class="id-toggle-face">
+            <span class="id-toggle-label">
+              <span class="id-chk">
+                <svg class="id-chk-mark" viewBox="0 0 8 8" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,4 3,6.5 7,2"/></svg>
+              </span>
+              Ada identitas yang tidak dibawa (KTP / SIM / keduanya)
+            </span>
+            <span class="id-toggle-price">+$1.500</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="catalog"></div>
+    <div style="height:28px"></div>
+  </div>
+</div>
+
+<div class="sidebar">
+    <div class="receipt">
+      <div class="receipt-top">
+        <div class="receipt-top-row">
+          <span class="receipt-top-title">Rincian Biaya</span>
+          <span class="r-badge" id="r-badge">0</span>
+        </div>
+      </div>
+      <div class="r-scroll" id="r-scroll">
+        <div class="r-empty" id="r-empty">Belum ada item</div>
+      </div>
+      <div class="receipt-foot">
+        <div class="receipt-foot-inner">
+          <div class="total-block">
+            <div>
+              <div class="total-lbl">Total Biaya</div>
+              <div class="total-sub" id="r-count">0 item dipilih</div>
+            </div>
+            <div class="total-num" id="r-total">$0</div>
+          </div>
+          <button class="reset-btn" onclick="clearAll()">Reset Semua</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<footer>
+  Elite Custom Garage &mdash; Regulasi Modifikasi Resmi
+  <div class="footer-credit">made by KazuyaPiniko</div>
+</footer>
+
+<script>
+const catalog = [
+  {id:'paint',num:'01',name:'Paint',items:[
+    {name:'Primary',price:3500},{name:'Secondary',price:3500},{name:'Pearlescent',price:2000},
+    {name:'Interior',price:3500},{name:'Dashboard',price:3500},{name:'Chameleon',price:30000}
+  ]},
+  {id:'body',num:'02',name:'Body Part',items:[
+    {name:'Spoiler',price:10000},{name:'Front Bumper',price:10000},{name:'Rear Bumper',price:10000},
+    {name:'Roof',price:10000},{name:'Side Skirt',price:7500},{name:'Exhaust',price:3500},
+    {name:'Frame / Rollcage',price:7500},{name:'Grill',price:3000},{name:'Hood',price:10000},
+    {name:'Left Fender',price:7500},{name:'Engine Block',price:3500},{name:'Livery',price:7500},
+    {name:'Trim',price:5000}
+  ]},
+  {id:'tint',num:'03',name:'Window Tint',items:[
+    {name:'Tint 0%',price:200},{name:'Tint 10%',price:100},{name:'Tint 50%',price:700},
+    {name:'Tint 60%',price:400},{name:'Tint 80%',price:1000},{name:'Tint 100%',price:5000}
+  ]},
+  {id:'other',num:'04',name:'Other / Accessories',items:[
+    {name:'Window',price:5000},{name:'Struts',price:3000},{name:'Front Vanity Plates',price:3000},
+    {name:'License Plate Holder',price:3000},{name:'License Plate',price:3500},{name:'Plaque',price:3500},
+    {name:'Speakers',price:3500},{name:'Trunk',price:3500},{name:'Wings',price:5000},
+    {name:'Fuel Tank',price:5000},{name:'Aerials',price:3000},{name:'Arch Covers',price:3500},
+    {name:'Horns',price:5000},{name:'Hydraulics',price:7500}
+  ]},
+  {id:'interior',num:'05',name:'Interior',items:[
+    {name:'Interior',price:5000},{name:'Ornaments',price:3000},{name:'Dashboard',price:3000},
+    {name:'Dial',price:3000},{name:'Shifting Levers',price:3000},{name:'Door Speaker',price:3000},
+    {name:'Seats',price:3000},{name:'Steering Wheels',price:3000},{name:'Vehicle Extras',price:5000}
+  ]},
+  {id:'neon',num:'06',name:'Neon & Xenon',items:[
+    {name:'Neon All 4 Side',price:5000},{name:'Neon Color',price:3000},
+    {name:'Xenon Pemasangan',price:5000},{name:'Xenon Color',price:5000}
+  ]},
+  {id:'wheel',num:'07',name:'Wheel',items:[
+    {name:'Wheel Color',price:3500},{name:'Tire Smoke Color',price:3000},{name:'Wheel Types',price:30000},
+    {name:'Tire Enhancements',price:5000},{name:'Camber (Stancer)',price:50000},{name:'Spacers (Stancer)',price:30000}
+  ]},
+  {id:'perf',num:'08',name:'Performance',items:[
+    {name:'Engine (Motor)',price:60000},{name:'Engine (Mobil)',price:7000},{name:'Brakes',price:30000},
+    {name:'Transmission',price:60000},{name:'Armour',price:60000},{name:'Turbo',price:30000},
+    {name:'NOS / Air Filter',price:30000}
+  ]},
+  {id:'susp',num:'09',name:'Suspension',items:[
+    {name:'Suspension Lowered',price:7500},{name:'Suspension Street',price:10000},
+    {name:'Suspension Sports',price:30000},{name:'Suspension Competition',price:60000}
+  ]}
+];
+
+const sel = {};
+const idSt = {active: false};
+
+function idTotal(){ return idSt.active ? 1500 : 0; }
+
+function toggleId(){
+  idSt.active = !idSt.active;
+  document.getElementById('tog-id').classList.toggle('active', idSt.active);
+  render();
+}
+
+function fmt(n){return '$'+n.toLocaleString('id-ID');}
+
+function buildCatalog(){
+  const c=document.getElementById('catalog');
+  catalog.forEach((cat,ci)=>{
+    const s=document.createElement('div');
+    s.className='section'; s.id='sec-'+cat.id;
+    s.innerHTML=`
+      <div class="sec-hd" onclick="toggleSec('${cat.id}')">
+        <div class="sec-hd-left">
+          <span class="sec-num">${cat.num}</span>
+          <span class="sec-label">${cat.name}</span>
+        </div>
+        <div class="sec-hd-right">
+          <span class="sec-pill" id="pill-${cat.id}"></span>
+          <svg class="sec-chevron open" id="chev-${cat.id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="sec-body open" id="body-${cat.id}"><div id="items-${cat.id}"></div></div>`;
+    c.appendChild(s);
+    const g=document.getElementById('items-'+cat.id);
+    cat.items.forEach((item,ii)=>{
+      const key=`${ci}_${ii}`;
+      sel[key]={checked:false,qty:1,name:item.name,price:item.price};
+      const row=document.createElement('div');
+      row.className='item-row'; row.id='row-'+key;
+      row.innerHTML=`
+        <div class="chk-box"><svg class="chk-mark" viewBox="0 0 10 10" fill="none" stroke="#080808" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></div>
+        <span class="item-label">${item.name}</span>
+        <div class="qty-wrap">
+          <button class="qbtn" onclick="event.stopPropagation();chgQty('${key}',-1)">−</button>
+          <div class="qval" id="qv-${key}">1</div>
+          <button class="qbtn" onclick="event.stopPropagation();chgQty('${key}',1)">+</button>
+        </div>
+        <span class="item-price">${fmt(item.price)}</span>`;
+      row.onclick=()=>toggleItem(key);
+      g.appendChild(row);
+    });
+  });
+}
+
+function toggleSec(id){
+  document.getElementById('body-'+id).classList.toggle('open');
+  document.getElementById('chev-'+id).classList.toggle('open');
+}
+
+function toggleItem(key){
+  sel[key].checked=!sel[key].checked;
+  document.getElementById('row-'+key).classList.toggle('sel',sel[key].checked);
+  render();
+}
+
+function chgQty(key,d){
+  sel[key].qty=Math.max(1,sel[key].qty+d);
+  document.getElementById('qv-'+key).textContent=sel[key].qty;
+  render();
+}
+
+function render(){
+  let total=0,count=0,lines=[];
+  const pen=idTotal();
+  if(pen>0){
+    lines.push({name:'Denda — Identitas tidak lengkap',qty:1,price:pen,pen:true});
+    total+=pen;
+  }
+  catalog.forEach((cat,ci)=>{
+    let cc=0;
+    cat.items.forEach((_,ii)=>{
+      const k=`${ci}_${ii}`,s=sel[k];
+      if(s&&s.checked){total+=s.price*s.qty;count+=s.qty;cc+=s.qty;lines.push({name:s.name,qty:s.qty,price:s.price*s.qty,pen:false});}
+    });
+    const pill=document.getElementById('pill-'+cat.id);
+    if(pill){pill.textContent=cc>0?cc:'';pill.classList.toggle('show',cc>0);}
+    const sec=document.getElementById('sec-'+cat.id);
+    if(sec) sec.classList.toggle('has-sel',cc>0);
+  });
+
+  document.getElementById('r-total').textContent=fmt(total);
+  document.getElementById('r-count').textContent=count+' item dipilih';
+  const badge=document.getElementById('r-badge');
+  badge.textContent=lines.length; badge.classList.toggle('show',lines.length>0);
+
+  const scroll=document.getElementById('r-scroll');
+  const empty=document.getElementById('r-empty');
+  scroll.querySelectorAll('.r-line,.r-sep').forEach(e=>e.remove());
+  if(lines.length===0){empty.style.display='block';return;}
+  empty.style.display='none';
+
+  const pens=lines.filter(l=>l.pen),items=lines.filter(l=>!l.pen);
+  pens.forEach(l=>{
+    const el=document.createElement('div'); el.className='r-line pen';
+    el.innerHTML=`<span class="r-line-name">${l.name}</span><span class="r-line-price">${fmt(l.price)}</span>`;
+    scroll.appendChild(el);
+  });
+  if(pens.length>0&&items.length>0){const s=document.createElement('div');s.className='r-sep';scroll.appendChild(s);}
+  items.forEach(l=>{
+    const el=document.createElement('div'); el.className='r-line';
+    el.innerHTML=`<div class="r-line-name">${l.name}${l.qty>1?`<br><span class="r-line-qty">×${l.qty}</span>`:''}</div><span class="r-line-price">${fmt(l.price)}</span>`;
+    scroll.appendChild(el);
+  });
+}
+
+function clearAll(){
+  Object.keys(sel).forEach(k=>{
+    sel[k].checked=false;sel[k].qty=1;
+    const r=document.getElementById('row-'+k);if(r)r.classList.remove('sel');
+    const q=document.getElementById('qv-'+k);if(q)q.textContent=1;
+  });
+  idSt.active=false;
+  document.getElementById('tog-id').classList.remove('active');
+  render();
+}
+
+buildCatalog();
+render();
+</script>
+</body>
+</html>
